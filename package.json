@@ -1,0 +1,42 @@
+{
+  "name": "nodejs-rest-starter",
+  "version": "0.0.1",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "nohup node src/app.js > /dev/null 2>&1 &",
+    "stop": "kill -9 $(cat ./app.pid)",
+    "test": "mocha --timeout 60s --exit $(find ./test -name '*.js') --recursive -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rxcats/nodejs-rest-demo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rxcats/nodejs-rest-demo/issues"
+  },
+  "homepage": "https://github.com/rxcats/nodejs-rest-demo#readme",
+  "dependencies": {
+    "assert": "^1.4.1",
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "express": "^4.16.4",
+    "express-validator": "^5.3.0",
+    "jsonschema": "^1.2.4",
+    "mocha": "^5.2.0",
+    "morgan": "^1.9.1",
+    "mysql2": "^1.6.5",
+    "redis": "^2.8.0",
+    "string-hash": "^1.1.3",
+    "system-sleep": "^1.3.6",
+    "validator": "^10.11.0",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^3.8.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.15.1"
+  }
+}

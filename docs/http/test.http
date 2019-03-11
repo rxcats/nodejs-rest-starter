@@ -1,0 +1,24 @@
+POST http://localhost:8080/v1/hello
+Content-Type: application/vnd.rxcats.api
+
+{
+  "data": {
+    "name": "john"
+  }
+}
+
+###
+
+POST http://localhost:8080/v1/hello
+Content-Type: application/vnd.rxcats.api
+
+sZ/aEZmam3PD3QFoJ5zPesFW10e9OW55TSoFyUDOWDk=
+
+###
+
+POST http://localhost:8080/v1/hello/error
+Content-Type: application/vnd.rxcats.api
+
+sZ/aEZmam3PD3QFoJ5zPesFW10e9OW55TSoFyUDOWDk=
+
+###
