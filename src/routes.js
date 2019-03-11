@@ -12,7 +12,7 @@ const wrap = asyncFunction => (async (req, res, next) => {
     const result = await asyncFunction(req, res, next);
     const json = JSON.stringify(Response.of(result));
     res.setHeader('Content-Type', contentType);
-    logger.debug('jsonResponse:%s', json);
+    res.rawBody = json;
     if (req.isEncrypt) {
       const body = aes.encode(json);
       res.send(body);

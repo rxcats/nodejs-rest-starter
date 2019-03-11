@@ -1,10 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const compress = require('compression');
 
 const app = express();
-const compress = require('compression');
-const httpLogger = require('morgan');
 const error = require('./error/error');
 const { port, contentType } = require('./config/app.config');
 const aes = require('./util/aes');
@@ -18,7 +17,17 @@ fs.writeFile('app.pid', process.pid, (err) => {
   }
 });
 
-app.use(httpLogger('dev'));
+// logging request, response
+const originalSendLog = app.response.send;
+app.response.send = function sendOverWrite(body) {
+  originalSendLog.call(this, body);
+  logger.debug('request [%s] [%s] [%O]', this.req.method, this.req.url, JSON.stringify(this.req.rawBody));
+  logger.debug('response [%s] [%s] [%O] - %dms', 
+    this.req.method, 
+    this.req.url, 
+    this.rawBody, 
+    new Date() - this.req.startDate);
+};
 
 /**
  * request body converter
@@ -29,6 +38,7 @@ app.use(httpLogger('dev'));
  */
 const rawBodySaver = (req, res, buf, encoding) => {
   let jsonBody = '{}';
+  req.startDate = new Date();
   req.rawBody = {};
   req.isEncrypt = false;
   if (buf && buf.length > 0) {
@@ -44,7 +54,6 @@ const rawBodySaver = (req, res, buf, encoding) => {
         }
         req.rawBody = JSON.parse(jsonBody);
       }
-      logger.debug('request json: %s', jsonBody);
     } catch (e) {
       logger.error('request parse error: %O', e);
       throw e;
