@@ -4,7 +4,7 @@ module.exports = {
   contentType: 'application/vnd.rxcats.api',
   logger: {
     level: 'trace',
-    types: ['console', 'file'],
+    types: ['console'], // 'console', 'file'
     dir: 'log',
     filename: 'app-%DATE%.log',
     zippedArchive: true,

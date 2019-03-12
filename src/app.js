@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const compress = require('compression');
@@ -21,13 +22,25 @@ fs.writeFile('app.pid', process.pid, (err) => {
 const originalSendLog = app.response.send;
 app.response.send = function sendOverWrite(body) {
   originalSendLog.call(this, body);
-  logger.debug('request [%s] [%s] [%O]', this.req.method, this.req.url, JSON.stringify(this.req.rawBody));
-  logger.debug('response [%s] [%s] [%O] - %dms', 
+  
+  logger.debug('request [%s] [%s] [%s]', this.req.method, this.req.url, JSON.stringify(this.req.rawBody));
+  logger.debug('response [%s] [%s] [%s] - %dms', 
     this.req.method, 
     this.req.url, 
     this.rawBody, 
     new Date() - this.req.startDate);
 };
+
+app.use(cors());
+
+// favicon
+app.use((req, res, next) => {
+  if (/\/favicon\.?(jpe?g|png|ico|gif)?$/i.test(req.url)) {
+    res.status(204).end();
+  } else {
+    next();
+  }
+});
 
 /**
  * request body converter

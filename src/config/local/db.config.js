@@ -34,4 +34,7 @@ module.exports = {
       retryMillis: 5000,
     },
   },
+  mongodb: {
+    url: 'mongodb://192.168.99.100:27017/test',
+  }
 };
