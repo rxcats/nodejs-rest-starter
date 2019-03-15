@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-module.exports = mongoose.model('player', new Schema({
+const model = mongoose.model('player', new mongoose.Schema({
   _id: String,
   state: String,
   nickname: String,
@@ -9,3 +8,5 @@ module.exports = mongoose.model('player', new Schema({
   updatedAt: Date,
   createdAt: Date,
 }, {collection: 'player'}));
+
+module.exports = model;
