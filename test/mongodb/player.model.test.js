@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const sleep = require('system-sleep');
 
 const {env} = require('../../src/config/app.config');
 const {mongodb} = require(`../../src/config/${env}/db.config`);
@@ -8,20 +7,20 @@ const logger = require('../../src/util/logger');
 const Player = require('../../src/model/mongodb/player.model');
 
 describe('player.model.test', () => {
-  before(() => {
-    mongoose.connect(mongodb.url, {useNewUrlParser: true})
-      .then(() => {
-        logger.info('mongodb connection success.');
-      })
-      .catch(e => {
-        logger.error('mongodb connection failed. %O', e);
-      });
-
-    sleep(500);
+  before(async () => {
+    try {
+      await mongoose.connect(mongodb.url, {useNewUrlParser: true});
+    } catch(err) {
+      logger.error('mongodb connection failed. %O', err);
+    }
   });
-  
-  after(() => {
-    mongoose.connection.close();
+
+  after(async () => {
+    try {
+      await mongoose.connection.close();
+    } catch (err) {
+      logger.error('mongodb connection close failed. %O', err);
+    }
   });
 
   it('test', async () => {
