@@ -22,12 +22,12 @@ fs.writeFile('app.pid', process.pid, (err) => {
 const originalSendLog = app.response.send;
 app.response.send = function sendOverWrite(body) {
   originalSendLog.call(this, body);
-  
+
   logger.debug('request [%s] [%s] [%s]', this.req.method, this.req.url, JSON.stringify(this.req.rawBody));
-  logger.debug('response [%s] [%s] [%s] - %dms', 
-    this.req.method, 
-    this.req.url, 
-    this.rawBody, 
+  logger.debug('response [%s] [%s] [%s] - %dms',
+    this.req.method,
+    this.req.url,
+    this.rawBody,
     new Date() - this.req.startDate);
 };
 

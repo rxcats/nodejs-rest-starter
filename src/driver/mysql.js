@@ -6,11 +6,17 @@ const { env } = require('../config/app.config');
 const config = require(`../config/${env}/db.config`);
 const logger = require('../util/logger');
 
-let dbPool = {};
+let dbPool;
 
-exports.createPool = () => {
+module.exports.createPool = () => {
+  if (dbPool) {
+    return;
+  }
+
+  dbPool = {};
+
   const commonPool = mysql.createPool(config.database.common);
-  dbPool.common = commonPool.promise();
+  dbPool['common'] = commonPool.promise();
 
   Object.values(config.database.user.list).forEach((info, shard) => {
     const shardPool = mysql.createPool(info);
@@ -21,13 +27,13 @@ exports.createPool = () => {
 /**
  * @returns {string[]}
  */
-exports.getAllShardNo = () => Object.keys(config.database.user.list);
+module.exports.getAllShardNo = () => Object.keys(config.database.user.list);
 
 /**
  * @param {string | number} userId
  * @returns {number}
  */
-exports.getNewShardNo = (userId) => {
+module.exports.getNewShardNo = (userId) => {
   const userIdHash = stringHash(userId);
   const shardKey = (userIdHash % config.database.user.shardTarget.length);
   const shardNo = config.database.user.shardTarget[shardKey];
@@ -42,10 +48,10 @@ exports.getNewShardNo = (userId) => {
  * @param {object} clazz
  * @returns {Promise<array>}
  */
-exports.select = async (pool, sql, params, clazz = null) => {
+module.exports.select = async (pool, sql, params, clazz = null) => {
   const q = dbPool[pool].format(sql, params);
   logger.debug('sql: %s', q);
-  
+
   const [rows] = await dbPool[pool].query(q);
 
   if (clazz === null) {
@@ -62,10 +68,10 @@ exports.select = async (pool, sql, params, clazz = null) => {
  * @param {object} clazz
  * @returns {Promise<object>}
  */
-exports.selectOne = async (pool, sql, params, clazz = null) => {
+module.exports.selectOne = async (pool, sql, params, clazz = null) => {
   const q = dbPool[pool].format(sql, params);
   logger.debug('sql: %s', q);
-  
+
   const [rows] = await dbPool[pool].query(q);
 
   if (rows.length === 0) {
@@ -87,10 +93,10 @@ exports.selectOne = async (pool, sql, params, clazz = null) => {
  * @param {object} clazz
  * @returns {Promise<object>}
  */
-exports.selectMap = async (pool, sql, params, key, clazz = null) => {
+module.exports.selectMap = async (pool, sql, params, key, clazz = null) => {
   const q = dbPool[pool].format(sql, params);
   logger.debug('sql: %s', q);
-  
+
   const [rows] = await dbPool[pool].query(q);
 
   const result = {};
@@ -112,10 +118,10 @@ exports.selectMap = async (pool, sql, params, key, clazz = null) => {
  * @param {array} params
  * @returns {Promise<void>}
  */
-exports.executeQuery = async (pool, sql, params) => {
+module.exports.executeQuery = async (pool, sql, params) => {
   const q = dbPool[pool].format(sql, params);
   logger.debug('sql: %s', q);
-  
+
   // {PromisePool}
   await dbPool[pool].query(q);
 };

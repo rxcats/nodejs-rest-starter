@@ -7,6 +7,6 @@ const model = mongoose.model('player', new mongoose.Schema({
   level: Number,
   updatedAt: Date,
   createdAt: Date,
-}, {collection: 'player'}));
+}, { collection: 'player' }));
 
 module.exports = model;

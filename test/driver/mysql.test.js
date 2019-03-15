@@ -1,11 +1,11 @@
 const assert = require('assert');
 const mysql = require('../../src/driver/mysql');
 const logger = require('../../src/util/logger');
-const loader = require('../loader');
 
 describe('mysql test', () => {
-  before(() => {
-    loader.initMysql();
+  before((done) => {
+    mysql.createPool();
+    done();
   });
   
   it('select one test', async () => {

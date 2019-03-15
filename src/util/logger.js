@@ -2,10 +2,10 @@ const fs = require('fs');
 const winston = require('winston');
 const DailyRotateFile = require('winston-daily-rotate-file');
 const appConfig = require('../config/app.config');
-const {level, types, dir, filename, zippedArchive, maxSize, maxFiles} = appConfig.logger;
+const { level, types, dir, filename, zippedArchive, maxSize, maxFiles } = appConfig.logger;
 
 const logDir = `${__dirname}/../../${dir}`;
-  
+
 const config = {
   levels: {
     error: 0,

@@ -2,7 +2,7 @@ const { validate } = require('jsonschema');
 
 const helloService = require('../service/hello.service');
 
-exports.hello = async (req) => {
+module.exports.hello = async (req) => {
   validate(req.rawBody.data, {
     type: 'object',
     required: ['name'],
@@ -11,7 +11,7 @@ exports.hello = async (req) => {
   return await helloService.hello(req.rawBody.data.name);
 };
 
-exports.helloError = async (req) => {
+module.exports.helloError = async (req) => {
   validate(req.rawBody.data, {
     type: 'object',
     required: ['name'],

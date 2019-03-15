@@ -9,16 +9,16 @@ const { host, port, password, database, retryMillis } = server;
 
 let redisClient;
 
-exports.connect = () => {
+module.exports.connect = () => {
   if (!enable) {
     logger.info('redis disabled');
     return;
   }
-  
+
   if (redisClient) {
     return;
   }
-  
+
   redisClient = redis.createClient({
     host: host,
     port: port,
@@ -47,7 +47,7 @@ exports.connect = () => {
   });
 };
 
-exports.close = () => {
+module.exports.close = () => {
   if (!enable) {
     return;
   }
@@ -62,7 +62,7 @@ exports.close = () => {
 
 const isActive = () => !(!enable || !redisClient || !redisClient.connected);
 
-exports.getClient = () => {
+module.exports.getClient = () => {
   if (!enable) {
     throw new Error('redis disabled');
   }
@@ -74,7 +74,7 @@ exports.getClient = () => {
   return redisClient;
 };
 
-exports.getValue = async (key) => new Promise((resolve, reject) => {
+module.exports.getValue = async (key) => new Promise((resolve, reject) => {
   if (!isActive()) {
     return resolve(null);
   }
@@ -89,7 +89,7 @@ exports.getValue = async (key) => new Promise((resolve, reject) => {
   });
 });
 
-exports.setValue = async (key, value, ttl = 0) => new Promise((resolve, reject) => {
+module.exports.setValue = async (key, value, ttl = 0) => new Promise((resolve, reject) => {
   if (!isActive()) {
     return resolve(value);
   }
@@ -113,7 +113,7 @@ exports.setValue = async (key, value, ttl = 0) => new Promise((resolve, reject) 
   }
 });
 
-exports.delValue = async key => new Promise((resolve, reject) => {
+module.exports.delValue = async key => new Promise((resolve, reject) => {
   if (!isActive()) {
     return resolve(null);
   }
